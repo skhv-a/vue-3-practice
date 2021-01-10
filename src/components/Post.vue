@@ -23,9 +23,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "../scss/variables";
+
 .post {
   cursor: pointer;
-  $border-radius: 0.5rem;
   $background-color: lightgrey;
 
   display: flex;
