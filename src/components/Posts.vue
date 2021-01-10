@@ -1,29 +1,50 @@
 <template>
-  <div v-if="state.isLoading">Loading...</div>
-  <div v-else-if="state.response" class="posts-wrapper">
-    <Post v-for="post in state.response" :key="post.id" :post="post" />
+  <div class="header">
+    <h1>Posts</h1>
+    <PostsSearch v-if="state.response" @onSearch="onSearch" />
   </div>
-  <div v-else>{{ state.error }}</div>
+  <div v-if="state.isLoading">Loading...</div>
+  <div v-else-if="state.error">{{ state.error }}</div>
+  <div class="posts-wrapper" v-else>
+    <Post v-for="post in searchedPosts" :key="post.id" :post="post" />
+    <h1 v-if="!searchedPosts.length">No posts</h1>
+  </div>
 </template>
 
 <script lang="ts">
-import { onMounted } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { Post as IPost } from "../api/models/post";
 import useRequest from "../api/useRequest";
 import Post from "./Post.vue";
+import PostsSearch from "./PostsSearch.vue";
 
 export default {
   name: "Posts",
-  components: { Post },
+  components: { Post, PostsSearch },
   setup() {
     const { state, call } = useRequest<IPost[]>();
+    const searchedPosts = ref<IPost[] | null>(null);
 
     onMounted(() => {
       call("https://jsonplaceholder.typicode.com/posts");
     });
 
+    watch(state.value, () => {
+      if (state.value.response) {
+        searchedPosts.value = state.value.response;
+      }
+    });
+
+    const onSearch = (val: string) => {
+      searchedPosts.value = state.value.response!.filter((post) =>
+        post.title.includes(val)
+      );
+    };
+
     return {
       state,
+      onSearch,
+      searchedPosts,
     };
   },
 };
@@ -34,5 +55,8 @@ export default {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 1rem;
+}
+.header {
+  margin-bottom: 1rem;
 }
 </style>
