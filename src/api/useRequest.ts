@@ -17,15 +17,16 @@ const useRequest = <res>() => {
 
   const call = async (config: RequestInfo) => {
     try {
-      state.value.isLoading = true;
+      state.value = { ...state.value, isLoading: true };
 
       const response = await fetch(config);
-      
-      state.value.response = await response.json();
+      const data = await response.json();
+
+      state.value = { ...state.value, response: data };
     } catch (error) {
-      state.value.error = error.message;
+      state.value = { ...state.value, error };
     } finally {
-      state.value.isLoading = false;
+      state.value = { ...state.value, isLoading: false };
     }
   };
 

@@ -1,6 +1,7 @@
 Vue 3 practice
 
 Composition API
+Vue Router
 TypeScript
 SCSS
 

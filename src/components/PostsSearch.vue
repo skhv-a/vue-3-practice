@@ -5,15 +5,16 @@
 <script lang="ts">
 import { ref, watch } from "vue";
 import { debounce } from "../utils/debounce";
+
 export default {
   name: "PostsSearch",
-  emits: ["onSearch"],
+  emits: ["search"],
   setup(props, { emit }) {
     const inputValue = ref("");
 
     const debouncedEmitWrapper = debounce((val: string) => {
-      emit("onSearch", val.trim());
-    }, 500);
+      emit("search", val.trim());
+    }, 100);
 
     watch(inputValue, (val) => {
       debouncedEmitWrapper(val);
