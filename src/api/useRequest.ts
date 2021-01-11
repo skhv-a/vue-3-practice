@@ -23,7 +23,6 @@ const useRequest = <res>() => {
       const data = await response.json();
 
       state.value = { ...state.value, response: data };
-      console.log(state.value);
     } catch (error) {
       state.value = { ...state.value, error };
     } finally {

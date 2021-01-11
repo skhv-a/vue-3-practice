@@ -1,10 +1,13 @@
 <template>
-  <router-link to="/">posts page</router-link>
-  <div v-if="error">{{ error.message }}</div>
-  <div v-else-if="postState.response && userState.response">
-    <Post :post="postState.response" />
+  <div class="wrapper">
+    <GoBack :to="'/'" :text="'Posts'" />
+    <ErrorBox v-if="error" :error="error" />
+    <div v-else-if="postState.response && userState.response">
+      <Post :post="postState.response" />
+      <h3>Created by: {{ userState.response.username }}</h3>
+    </div>
+    <Loader v-else />
   </div>
-  <div v-else>Loading...</div>
 </template>
 
 <script lang="ts">
@@ -13,9 +16,12 @@ import { useRoute } from "vue-router";
 import Post from "../../../components/Post.vue";
 import useGetPost from "../../../hooks/useGetPost";
 import useGetUser from "../../../hooks/useGetUser";
+import ErrorBox from "../../../components/ErrorBox.vue";
+import Loader from "../../../components/Loader.vue";
+import GoBack from "../../../components/GoBack.vue";
 
 export default {
-  components: { Post },
+  components: { Post, ErrorBox, Loader, GoBack },
   name: "PostID",
   setup() {
     const route = useRoute();
@@ -24,13 +30,22 @@ export default {
 
     const postID = Number(route.params["postID"]);
 
+    let error;
+
+    if (isNaN(postID)) {
+      error = {
+        message: "Wrong post id",
+      };
+    }
+
     onMounted(async () => {
       try {
         await getPost(postID);
         await getUser(postState.value.response!.userId);
-        // console.log(postState.value.response, userState.value.response);
       } catch (error) {
-        alert("Что-то пошло не так");
+        error = {
+          message: "Something went wrong :(",
+        };
         return;
       }
     });
@@ -38,10 +53,14 @@ export default {
     return {
       postState,
       userState,
-      error: postState.value.error || userState.value.error,
+      error: postState.value.error || userState.value.error || error,
     };
   },
 };
 </script>
 
-<style></style>
+<style scoped>
+* {
+  text-align: left;
+}
+</style>

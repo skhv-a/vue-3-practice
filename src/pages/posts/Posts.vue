@@ -1,32 +1,27 @@
 <template>
-  <div class="header">
-    <h1>Posts</h1>
-    <PostsSearch v-if="state.response" @onSearch="onSearch" />
-  </div>
-  <div v-if="state.error">{{ state.error }}</div>
-  <div class="posts-wrapper" v-else-if="searchedPosts">
-    <router-link
-      v-for="post in searchedPosts"
-      :key="post.id"
-      :to="{ name: 'post', params: { postID: post.id } }"
-    >
-      <Post :post="post" />
-    </router-link>
-    <h1 v-if="!searchedPosts.length">No posts</h1>
-  </div>
-  <div v-else>Loading...</div>
+  <PostsHeader :posts="state.response" :onPostsSearch="searchPostHandler" />
+  <ErrorBox v-if="state.error" :error="state.error" />
+  <PostsWrapper v-else-if="searchedPosts" :posts="searchedPosts" />
+  <Loader v-else />
 </template>
 
 <script lang="ts">
 import { onMounted, ref, watch } from "vue";
 import { Post as IPost } from "../../api/models/post";
 import useRequest from "../../api/useRequest";
-import Post from "../../components/Post.vue";
-import PostsSearch from "../../components/PostsSearch.vue";
+import ErrorBox from "../../components/ErrorBox.vue";
+import Loader from "../../components/Loader.vue";
+import PostsHeader from "../../components/PostsHeader.vue";
+import PostsWrapper from "../../components/PostsWrapper.vue";
 
 export default {
   name: "Posts",
-  components: { Post, PostsSearch },
+  components: {
+    ErrorBox,
+    Loader,
+    PostsHeader,
+    PostsWrapper,
+  },
   setup() {
     const { state, call } = useRequest<IPost[]>();
     const searchedPosts = ref<IPost[] | null>(null);
@@ -35,13 +30,13 @@ export default {
       call("https://jsonplaceholder.typicode.com/posts");
     });
 
-    watch(state.value, () => {
+    watch(state, () => {
       if (state.value.response) {
         searchedPosts.value = state.value.response;
       }
     });
 
-    const onSearch = (val: string) => {
+    const searchPostHandler = (val: string) => {
       searchedPosts.value = state.value.response!.filter((post) =>
         post.title.includes(val)
       );
@@ -49,8 +44,8 @@ export default {
 
     return {
       state,
-      onSearch,
       searchedPosts,
+      searchPostHandler,
     };
   },
 };
@@ -61,8 +56,5 @@ export default {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 1rem;
-}
-.header {
-  margin-bottom: 1rem;
 }
 </style>

@@ -10,12 +10,6 @@
 </template>
 
 <script lang="ts">
-import { Post } from "../api/models/post";
-
-type Props = {
-  post: Post;
-};
-
 export default {
   name: "Post",
   props: ["post"],
@@ -26,13 +20,13 @@ export default {
 @import "../scss/variables";
 
 .post {
-  cursor: pointer;
   $background-color: lightgrey;
 
   display: flex;
   flex-direction: column;
 
   .title {
+    padding: 0 0.5rem;
     border-radius: $border-radius;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
@@ -40,7 +34,7 @@ export default {
   }
 
   .body {
-    padding: 0.5rem 0;
+    padding: 0.5rem;
     border: 1px solid $background-color;
     border-bottom-left-radius: $border-radius;
     border-bottom-right-radius: $border-radius;

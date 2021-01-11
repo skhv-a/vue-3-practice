@@ -15,3 +15,7 @@ a {
   color: var(--main);
   text-decoration: none;
 }
+
+.link {
+  color: blue;
+}
