@@ -2,9 +2,9 @@
   <div class="wrapper">
     <GoBack :to="'/'" :text="'Posts'" />
     <ErrorBox v-if="error" :error="error" />
-    <div v-else-if="postState.response && userState.response">
-      <Post :post="postState.response" />
-      <h3>Created by: {{ userState.response.username }}</h3>
+    <div v-else-if="post.response && user.response">
+      <Post :post="post.response" />
+      <h3>Created by: {{ user.response.username }}</h3>
     </div>
     <Loader v-else />
   </div>
@@ -51,8 +51,8 @@ export default {
     });
 
     return {
-      postState,
-      userState,
+      post: postState,
+      user: userState,
       error: postState.value.error || userState.value.error || error,
     };
   },
