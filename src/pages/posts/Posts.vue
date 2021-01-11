@@ -5,7 +5,13 @@
   </div>
   <div v-if="state.error">{{ state.error }}</div>
   <div class="posts-wrapper" v-else-if="searchedPosts">
-    <Post v-for="post in searchedPosts" :key="post.id" :post="post" />
+    <router-link
+      v-for="post in searchedPosts"
+      :key="post.id"
+      :to="{ name: 'post', params: { postID: post.id } }"
+    >
+      <Post :post="post" />
+    </router-link>
     <h1 v-if="!searchedPosts.length">No posts</h1>
   </div>
   <div v-else>Loading...</div>

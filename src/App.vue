@@ -1,5 +1,5 @@
 <template>
-  <Posts />
+  <router-view />
 </template>
 
 <script>
