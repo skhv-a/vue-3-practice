@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import Posts from "./components/Posts.vue";
+import Posts from "./pages/posts/Posts.vue";
 
 export default {
   name: "App",

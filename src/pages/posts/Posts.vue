@@ -3,20 +3,20 @@
     <h1>Posts</h1>
     <PostsSearch v-if="state.response" @onSearch="onSearch" />
   </div>
-  <div v-if="state.isLoading">Loading...</div>
-  <div v-else-if="state.error">{{ state.error }}</div>
-  <div class="posts-wrapper" v-else>
+  <div v-if="state.error">{{ state.error }}</div>
+  <div class="posts-wrapper" v-else-if="searchedPosts">
     <Post v-for="post in searchedPosts" :key="post.id" :post="post" />
     <h1 v-if="!searchedPosts.length">No posts</h1>
   </div>
+  <div v-else>Loading...</div>
 </template>
 
 <script lang="ts">
 import { onMounted, ref, watch } from "vue";
-import { Post as IPost } from "../api/models/post";
-import useRequest from "../api/useRequest";
-import Post from "./Post.vue";
-import PostsSearch from "./PostsSearch.vue";
+import { Post as IPost } from "../../api/models/post";
+import useRequest from "../../api/useRequest";
+import Post from "../../components/Post.vue";
+import PostsSearch from "../../components/PostsSearch.vue";
 
 export default {
   name: "Posts",
