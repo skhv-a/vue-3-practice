@@ -1,12 +1,12 @@
 <template>
-  <PostsHeader :posts="state.response" :onPostsSearch="searchPostHandler" />
-  <ErrorBox v-if="state.error" :error="state.error" />
+  <PostsHeader :posts="response" :onPostsSearch="searchPostHandler" />
+  <ErrorBox v-if="error" :error="error" />
   <PostsWrapper v-else-if="searchedPosts" :posts="searchedPosts" />
   <Loader v-else />
 </template>
 
 <script lang="ts">
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch, toRefs } from "vue";
 import { Post as IPost } from "../../api/models/post";
 import useRequest from "../../api/useRequest";
 import ErrorBox from "../../components/ErrorBox.vue";
@@ -43,7 +43,7 @@ export default {
     };
 
     return {
-      state,
+      ...toRefs(state.value),
       searchedPosts,
       searchPostHandler,
     };
