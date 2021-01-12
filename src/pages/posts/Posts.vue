@@ -1,6 +1,6 @@
 <template>
-  <PostsHeader :posts="response" :onPostsSearch="searchPostHandler" />
-  <ErrorBox v-if="error" :error="error" />
+  <PostsHeader :posts="state.response" :onPostsSearch="searchPostHandler" />
+  <ErrorBox v-if="state.error" :error="error" />
   <PostsWrapper v-else-if="searchedPosts" :posts="searchedPosts" />
   <Loader v-else />
 </template>
@@ -43,7 +43,7 @@ export default {
     };
 
     return {
-      ...toRefs(state.value),
+      state,
       searchedPosts,
       searchPostHandler,
     };
